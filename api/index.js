@@ -1,14 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
-import cookieParser from 'cookie-parser';
+import listingRouter from "./routes/listing.route.js";
+
 dotenv.config();
 
-
 //mongoDB connection
-//const mongoURI= "mongodb+srv://shaibalpatra7:dRoaxvDP1MBsQrHK@cluster0.wrc1vh3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 mongoose.connect(process.env.MONGO).then(()=>{
     console.log("Database Connected");
 }).catch((err)=>{
@@ -17,17 +17,10 @@ mongoose.connect(process.env.MONGO).then(()=>{
 
 //express app connection
 const app = express();
+
+//middlewares
 app.use(express.json());
 app.use(cookieParser());
-//test api route
-app.use('/api/user',userRouter);
-
-//signup post api route
-app.use('/api/auth',authRouter);
-
-
-
-
 //middleware for errors
 app.use((err, req, res, next)=>{
     const statusCode = err.statusCode || 500;
@@ -40,6 +33,17 @@ app.use((err, req, res, next)=>{
 });
 
 
+//server setup and connection
 app.listen(3000, () => {
     console.log(`Server is running at port 3000.`);
 });
+
+
+//test api route
+app.use('/api/user',userRouter);
+//signup post api route
+app.use('/api/auth',authRouter);
+//listing Route for property listing
+app.use('/api/listing',listingRouter);
+
+
