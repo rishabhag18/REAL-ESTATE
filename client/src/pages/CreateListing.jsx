@@ -7,8 +7,10 @@ import {
 import React, { useState } from "react";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 export default function CreateListing() {
+  const navigate = useNavigate();
     const {currentUser} = useSelector(state => state.user);
   const [files, setFiles] = useState([]);
   const [imageUploadError, setImageUploadError] = useState(false);
@@ -116,7 +118,7 @@ const handleSubmit = async (e) => {
       if (data.success === false) {
         setError(data.message);
       }
-    //   navigate(`/listing/${data._id}`);
+      navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -214,7 +216,7 @@ const handleSubmit = async (e) => {
                 type="number"
                 id="regularPrice"
                 min="1"
-                max="20"
+                max="200000"
                 required
                 className="p-3 border border-grey-300 rounded-lg"
                 onChange={handleChange} value={formData.regularPrice}
@@ -224,12 +226,13 @@ const handleSubmit = async (e) => {
                 <span className="text-sm">(₹ / month)</span>
               </div>
             </div>
+            {formData.offer && 
             <div className="flex items-center gap-2">
               <input
                 type="number"
                 id="discountPrice"
-                min="1"
-                max="20"
+                min="0"
+                max="200000"
                 required
                 className="p-3 border border-grey-300 rounded-lg"
                 onChange={handleChange} value={formData.discountPrice}
@@ -239,6 +242,7 @@ const handleSubmit = async (e) => {
                 <span className="text-sm">(₹ / month)</span>
               </div>
             </div>
+}
           </div>
         </div>
         <div className="flex flex-col flex-1 gap-4">
@@ -275,7 +279,7 @@ const handleSubmit = async (e) => {
                 </div>
             ))
           }
-          <button disabled={loading} className="p-3 bg-slate-700 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
+          <button disabled={loading || uploading} className="p-3 bg-slate-700 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
             {loading ? "Creating...": "Create"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
