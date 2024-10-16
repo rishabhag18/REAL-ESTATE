@@ -29,9 +29,9 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
-
-  console.log(formData);
 
   useEffect(() => {
     if (file) {
@@ -119,6 +119,21 @@ export default function Profile() {
       dispatch(signOutUserFailure(data.message));
     }
   };
+  const handleShowListings = async () =>{
+    try{
+      setShowListingsError(false);
+      const res  =  await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      //console.log(data);
+      if(data.success===false){
+        setShowListingsError(true);
+        return;
+      }
+      setUserListings(data);
+    }catch(error){
+      setShowListingsError(true);
+    }
+  }
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -199,6 +214,16 @@ export default function Profile() {
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is updated successfully!" : ""}
       </p>
+      <button onClick={handleShowListings} className="text-green-700 w-full">Show listings</button>
+      <p className="text-red-700 mt-5">{showListingsError ? "Error showing listings" : ""}</p>
+      {userListings && userListings.length > 0 && userListings.map((listing) => {
+        <div key={listing._id} className="">
+          {/* <Link to={`/listing/${listing._id}`}> */}
+          <img src={listing.imageUrls[0]} alt="listing cover" />
+          {/* </Link> */}
+
+          </div>
+      })}
     </div>
   );
 }
