@@ -440,7 +440,7 @@ export default function CreateListing() {
         setError(data.message);
       }
       console.log(data._id);
-     // navigate(`/listing/${data._id}`);
+     navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
