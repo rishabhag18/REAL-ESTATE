@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   FaBath,
   FaBed,
@@ -24,7 +24,7 @@ export default function Listing() {
   const [copied, setCopied] = useState(false);
   
   const params = useParams();
-  // const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchListing = async () => {
