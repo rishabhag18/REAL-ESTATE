@@ -64,7 +64,7 @@ export const getListing = async(req,res,next) => {
     }
 };
 
-//For the search button
+//For the search buttonn
 export const getListings = async(req,res,next) => {
     try {
         const limit = parseInt(req.query.limit) || 9;
