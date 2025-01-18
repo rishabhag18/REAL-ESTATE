@@ -34,6 +34,22 @@ export default function Profile() {
   const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   if (file) {
+  //     handleFileUpload(file);
+  //   }
+  // }, [file]);
+
+  // const handleFileUpload = (file) => {
+  //   const storage = getStorage(app);
+  //   const fileName = new Date().getTime() + file.name;
+  //   const storageRef = ref(storage, fileName);
+  //   const uploadTask = uploadBytesResumable(storageRef, file);
+  //   uploadTask.on("state_changed", (snapshot) => {
+  //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //     setFilePerc(Math.round(progress));
+  //     // console.log('Upload is '+progress+' % done.');
+  //   });
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -45,20 +61,35 @@ export default function Profile() {
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on("state_changed", (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setFilePerc(Math.round(progress));
-      // console.log('Upload is '+progress+' % done.');
-    });
-    (error) => {
-      setFileUploadError(true);
-    };
-    async () => {
-     await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-        setFormData({ ...formData, avatar: downloadURL })
-      );
-    };
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePerc(Math.round(progress));
+      },
+  //   (error) => {
+  //     setFileUploadError(true);
+  //   };
+  //   async () => {
+  //    await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+  //       setFormData({ ...formData, avatar: downloadURL })
+  //     );
+  //   };
+  // };
+      (error) => {
+        setFileUploadError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, avatar: downloadURL })
+        );
+      }
+    );
   };
+
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
