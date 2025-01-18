@@ -53,8 +53,8 @@ export default function Profile() {
     (error) => {
       setFileUploadError(true);
     };
-    () => {
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+    async () => {
+     await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
         setFormData({ ...formData, avatar: downloadURL })
       );
     };
